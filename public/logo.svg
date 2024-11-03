@@ -1,0 +1,43 @@
+<svg viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景の円 -->
+  <circle cx="400" cy="400" r="380" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+  <circle cx="400" cy="400" r="280" fill="#f1f5f9" stroke="#e2e8f0" stroke-width="2"/>
+  <circle cx="400" cy="400" r="180" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+
+  <!-- 中心のDevOpsロゴ -->
+  <circle cx="400" cy="400" r="100" fill="#3b82f6" />
+  <text x="400" y="415" text-anchor="middle" fill="white" font-size="32" font-weight="bold">DevOps</text>
+
+  <!-- 7つのケイパビリティ -->
+  <!-- 文化・組織 -->
+  <circle cx="400" cy="150" r="40" fill="#2563eb"/>
+
+  <!-- プロセス -->
+  <circle cx="600" cy="250" r="40" fill="#7c3aed"/>
+
+  <!-- 技術 -->
+  <circle cx="650" cy="450" r="40" fill="#c026d3"/>
+
+  <!-- モニタリング -->
+  <circle cx="500" cy="600" r="40" fill="#e11d48"/>
+
+  <!-- セキュリティ -->
+  <circle cx="300" cy="600" r="40" fill="#ea580c"/>
+
+  <!-- 品質保証 -->
+  <circle cx="150" cy="450" r="40" fill="#ca8a04"/>
+
+  <!-- メトリクス -->
+  <circle cx="200" cy="250" r="40" fill="#16a34a"/>
+
+  <!-- 接続線 -->
+  <g stroke="#94a3b8" stroke-width="2">
+    <line x1="400" y1="300" x2="400" y2="190" />
+    <line x1="500" y1="400" x2="560" y2="250" />
+    <line x1="500" y1="400" x2="610" y2="450" />
+    <line x1="400" y1="500" x2="500" y2="560" />
+    <line x1="400" y1="500" x2="300" y2="560" />
+    <line x1="300" y1="400" x2="190" y2="450" />
+    <line x1="300" y1="400" x2="240" y2="250" />
+  </g>
+</svg>
