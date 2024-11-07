@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronUp, ChevronDown } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ChevronUp, ChevronDown } from 'lucide-react';
 import CsvUploader from './CsvUploader';
 import { CapabilityCategory, CapabilityData } from '../types';
 import { Card, CardHeader, CardContent } from './ui/card';
@@ -89,7 +89,8 @@ const CapabilityCard = ({ name, level, isFiltered }) => {
   );
 };
 
-const ScrollButton = ({ direction, onClick }) => (
+// ScrollButtonコンポーネントの定義
+const ScrollButton = ({ direction, onClick }: { direction: 'left' | 'right'; onClick: () => void }) => (
   <button
     onClick={onClick}
     className={`absolute top-1/2 transform -translate-y-1/2 z-10 
@@ -279,7 +280,7 @@ const DevOpsCapabilities = () => {
     setCapabilities(generateInitialCapabilities());
   };
 
-  const handleScroll = (direction) => {
+  const handleScroll = (direction: 'left' | 'right') => {
     const container = scrollContainerRef.current;
     if (container) {
       const scrollAmount = direction === 'left' ? -400 : 400;
