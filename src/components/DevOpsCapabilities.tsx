@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-// import { Card } from '@/components/ui/card';
-// import * as HoverCard from '@radix-ui/react-hover-card';
-import { Card, CardHeader, CardContent } from './ui/card'
-import { ChevronLeft, ChevronRight, ChevronUp, ChevronDown } from 'lucide-react';
+import { ChevronUp, ChevronDown } from 'lucide-react';
+import CsvUploader from './CsvUploader';
+import { CapabilityCategory, CapabilityData } from '../types';
+import { Card, CardHeader, CardContent } from './ui/card';
 
 const getMaturityColor = (level) => {
   switch (level) {
@@ -145,10 +145,24 @@ const MaturityLegend = () => {
 };
 
 const DevOpsCapabilities = () => {
-  const [selectedLevels, setSelectedLevels] = useState([]);
-  const [capabilities, setCapabilities] = useState([]);
+  const [selectedLevels, setSelectedLevels] = useState<number[]>([]);
+  const [capabilities, setCapabilities] = useState<CapabilityCategory[]>([]);
   const [isWideScreen, setIsWideScreen] = useState(false);
   const scrollContainerRef = React.useRef(null);
+
+
+  // 初期データの読み込み
+  useEffect(() => {
+    const savedData = localStorage.getItem('capabilityLevels');
+    if (savedData) {
+      const parsedData = JSON.parse(savedData);
+      const initialCapabilities = generateInitialCapabilities();
+      setCapabilities(updateCapabilityLevels(initialCapabilities, parsedData));
+    } else {
+      // ローカルストレージにデータがない場合はデフォルト値（レベル4）を設定
+      setCapabilities(generateInitialCapabilities());
+    }
+  }, []);
 
   useEffect(() => {
     const checkScreenWidth = () => {
@@ -160,90 +174,110 @@ const DevOpsCapabilities = () => {
     return () => window.removeEventListener('resize', checkScreenWidth);
   }, []);
 
-  useEffect(() => {
-    const getRandomLevel = () => Math.floor(Math.random() * 4) + 1;
-
+  const generateInitialCapabilities = (): CapabilityCategory[] => {
+    const defaultLevel = 4;
     const initialCapabilities = [
       {
         category: "文化・組織",
         items: [
-          { name: "クロスファンクショナルな協働", level: getRandomLevel() },
-          { name: "継続的な学習と改善", level: getRandomLevel() },
-          { name: "失敗から学ぶ文化", level: getRandomLevel() },
-          { name: "データドリブンな意思決定", level: getRandomLevel() },
-          { name: "変更への柔軟性", level: getRandomLevel() }
+          { name: "クロスファンクショナルな協働", level: defaultLevel },
+          { name: "継続的な学習と改善", level: defaultLevel },
+          { name: "失敗から学ぶ文化", level: defaultLevel },
+          { name: "データドリブンな意思決定", level: defaultLevel },
+          { name: "変更への柔軟性", level: defaultLevel }
         ]
       },
       {
         category: "プロセス",
         items: [
-          { name: "アジャイル開発", level: getRandomLevel() },
-          { name: "CI/CD", level: getRandomLevel() },
-          { name: "継続的デプロイメント", level: getRandomLevel() },
-          { name: "IaC", level: getRandomLevel() },
-          { name: "構成管理", level: getRandomLevel() },
-          { name: "リリース管理", level: getRandomLevel() }
+          { name: "アジャイル開発", level: defaultLevel },
+          { name: "CI/CD", level: defaultLevel },
+          { name: "継続的デプロイメント", level: defaultLevel },
+          { name: "IaC", level: defaultLevel },
+          { name: "構成管理", level: defaultLevel },
+          { name: "リリース管理", level: defaultLevel }
         ]
       },
       {
         category: "技術",
         items: [
-          { name: "バージョン管理", level: getRandomLevel() },
-          { name: "自動化ツール", level: getRandomLevel() },
-          { name: "コンテナ化", level: getRandomLevel() },
-          { name: "オーケストレーション", level: getRandomLevel() },
-          { name: "クラウド活用", level: getRandomLevel() },
-          { name: "マイクロサービス", level: getRandomLevel() }
+          { name: "バージョン管理", level: defaultLevel },
+          { name: "自動化ツール", level: defaultLevel },
+          { name: "コンテナ化", level: defaultLevel },
+          { name: "オーケストレーション", level: defaultLevel },
+          { name: "クラウド活用", level: defaultLevel },
+          { name: "マイクロサービス", level: defaultLevel }
         ]
       },
       {
         category: "モニタリング",
         items: [
-          { name: "アプリケーション監視", level: getRandomLevel() },
-          { name: "インフラ監視", level: getRandomLevel() },
-          { name: "ログ分析", level: getRandomLevel() },
-          { name: "パフォーマンス管理", level: getRandomLevel() },
-          { name: "セキュリティ監視", level: getRandomLevel() },
-          { name: "インシデント管理", level: getRandomLevel() }
+          { name: "アプリケーション監視", level: defaultLevel },
+          { name: "インフラ監視", level: defaultLevel },
+          { name: "ログ分析", level: defaultLevel },
+          { name: "パフォーマンス管理", level: defaultLevel },
+          { name: "セキュリティ監視", level: defaultLevel },
+          { name: "インシデント管理", level: defaultLevel }
         ]
       },
       {
         category: "セキュリティ",
         items: [
-          { name: "セキュリティテスト自動化", level: getRandomLevel() },
-          { name: "脆弱性スキャン", level: getRandomLevel() },
-          { name: "コンプライアンス", level: getRandomLevel() },
-          { name: "アクセス制御", level: getRandomLevel() },
-          { name: "シークレット管理", level: getRandomLevel() },
-          { name: "セキュアコーディング", level: getRandomLevel() }
+          { name: "セキュリティテスト自動化", level: defaultLevel },
+          { name: "脆弱性スキャン", level: defaultLevel },
+          { name: "コンプライアンス", level: defaultLevel },
+          { name: "アクセス制御", level: defaultLevel },
+          { name: "シークレット管理", level: defaultLevel },
+          { name: "セキュアコーディング", level: defaultLevel }
         ]
       },
       {
         category: "品質保証",
         items: [
-          { name: "自動テスト", level: getRandomLevel() },
-          { name: "コード品質管理", level: getRandomLevel() },
-          { name: "パフォーマンステスト", level: getRandomLevel() },
-          { name: "セキュリティテスト", level: getRandomLevel() },
-          { name: "UAT", level: getRandomLevel() },
-          { name: "カオスエンジニアリング", level: getRandomLevel() }
+          { name: "自動テスト", level: defaultLevel },
+          { name: "コード品質管理", level: defaultLevel },
+          { name: "パフォーマンステスト", level: defaultLevel },
+          { name: "セキュリティテスト", level: defaultLevel },
+          { name: "UAT", level: defaultLevel },
+          { name: "カオスエンジニアリング", level: defaultLevel }
         ]
       },
       {
         category: "メトリクス",
         items: [
-          { name: "デプロイメント頻度", level: getRandomLevel() },
-          { name: "リードタイム", level: getRandomLevel() },
-          { name: "MTTR", level: getRandomLevel() },
-          { name: "変更失敗率", level: getRandomLevel() },
-          { name: "SLO管理", level: getRandomLevel() },
-          { name: "フィードバック分析", level: getRandomLevel() }
+          { name: "デプロイメント頻度", level: defaultLevel },
+          { name: "リードタイム", level: defaultLevel },
+          { name: "MTTR", level: defaultLevel },
+          { name: "変更失敗率", level: defaultLevel },
+          { name: "SLO管理", level: defaultLevel },
+          { name: "フィードバック分析", level: defaultLevel }
         ]
       }
     ];
+    
+    return initialCapabilities;
+  };
 
-    setCapabilities(initialCapabilities);
-  }, []);
+  const updateCapabilityLevels = (
+    categories: CapabilityCategory[],
+    data: CapabilityData
+  ) => {
+    return categories.map(category => ({
+      ...category,
+      items: category.items.map(item => ({
+        ...item,
+        level: data[item.name] || item.level
+      }))
+    }));
+  };
+
+  const handleDataLoad = (data: CapabilityData) => {
+    setCapabilities(prev => updateCapabilityLevels(prev, data));
+  };
+
+  const handleReset = () => {
+    setCapabilities(generateInitialCapabilities());
+  };
 
   const handleScroll = (direction) => {
     const container = scrollContainerRef.current;
@@ -272,6 +306,8 @@ const DevOpsCapabilities = () => {
   return (
     <div className="p-6">
       <h1 className="text-3xl font-bold mb-8 text-center">DevOps Capabilities HeatMap</h1>
+
+      <CsvUploader onDataLoad={handleDataLoad} onReset={handleReset} />
       
       <div className="mb-8 sticky top-0 z-20 bg-white pt-4">
         <MaturityFilter 
